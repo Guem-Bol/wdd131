@@ -76,18 +76,53 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(addDynamicListItem, 5000); // Add a new item every 5 seconds
 });
 
-// --- Example of another event listener (e.g., a button click) ---
-// Let's assume you have a button in your HTML like: <button id="add-item-btn">Add Item</button>
-// If you add that button:
-/*
-document.addEventListener('DOMContentLoaded', () => {
-    const addItemBtn = document.getElementById('add-item-btn');
-    if (addItemBtn) {
-        addItemBtn.addEventListener('click', () => {
-            alert('Button clicked! You could fetch new data here.');
-            // Or directly call a function that modifies HTML
-            addDynamicListItem();
-        });
+
+
+// --- Function to fetch and display weather data ---
+async function fetchWeather(city = 'New Cairo City', countryCode = 'EG') {
+    weatherStatus.textContent = 'Fetching weather data...';
+    try {
+        const response = await fetch(`${weatherApiUrl}?q=${city},${countryCode}&appid=${weatherApiKey}&units=metric`);
+        if (!response.ok) {
+            throw new Error(`Weather data not found for ${city}. Status: ${response.status}`);
+        }
+        const data = await response.json();
+        displayWeather(data);
+    } catch (error) {
+        console.error('Error fetching weather:', error);
+        weatherStatus.textContent = `Failed to load weather for ${city}. Please try again later.`;
+        weatherContainer.innerHTML = ''; // Clear any previous details
     }
-});
-*/
+}
+
+function displayWeather(data) {
+    console.log("Weather Data Received:", data);
+
+    const iconCode = data.weather[0].icon;
+    const iconAlt = data.weather[0].description;
+    const openWeatherMapPngUrl = `https://openweathermap.org/img/w/${iconCode}.png`;
+    // Path to your local SVG icon for mobile view
+    const mobileSvgIconUrl = 'images/weather-icon-mobile.svg'; // Use the placeholder SVG
+
+    // Capitalize the first letter of the description
+    const condition = iconAlt.charAt(0).toUpperCase() + iconAlt.slice(1);
+
+    // Build the HTML for the weather details, including the <picture> element
+    weatherContainer.innerHTML = `
+        <div class="weather-icon-wrapper">
+            <picture>
+                <source srcset="${mobileSvgIconUrl}" media="(max-width: 768px)" type="image/svg+xml">
+                <img src="${openWeatherMapPngUrl}" alt="${iconAlt}" class="weather-icon">
+            </picture>
+            <p>${condition}</p>
+        </div>
+        <p>Temperature: ${data.main.temp}°C</p>
+        <p>Feels like: ${data.main.feels_like}°C</p>
+        <p>Humidity: ${data.main.humidity}%</p>
+        <p>Wind Speed: ${data.wind.speed} m/s</p>
+    `;
+
+    weatherStatus.textContent = `Weather in ${data.name}, ${data.sys.country}:`;
+}
+
+// ... (rest of the script.js code) ...

@@ -199,3 +199,54 @@ footer p {
         font-size: 1.3rem;
     }
 }
+
+/* style.css */
+
+/* ... (previous styles) ... */
+
+#weather-details {
+    display: flex; /* Use flexbox for alignment */
+    flex-direction: column; /* Stack items vertically by default */
+    align-items: center; /* Center horizontally */
+    text-align: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #ccc;
+}
+
+.weather-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    font-size: 1.2rem; /* Style for the condition text next to the icon */
+    font-weight: bold;
+}
+
+.weather-icon {
+    width: 60px;  /* Adjust size as needed */
+    height: 60px; /* Adjust size as needed */
+    margin-right: 10px; /* Space between icon and condition text */
+    vertical-align: middle; /* Align icon better with text */
+    /* Ensure the image within <picture> is styled */
+    display: block; /* Helps with layout consistency */
+}
+
+#weather-details p {
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+
+/* Optional: Adjust for smaller screens (media queries for other elements) */
+@media (max-width: 480px) {
+    .weather-icon {
+        width: 50px; /* Slightly smaller icon on very small screens */
+        height: 50px;
+    }
+    .weather-icon-wrapper p {
+        font-size: 1.1rem;
+    }
+    #weather-details p {
+        font-size: 1rem;
+    }
+}
